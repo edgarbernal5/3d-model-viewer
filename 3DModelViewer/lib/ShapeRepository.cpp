@@ -11,12 +11,12 @@ ShapeRepository::~ShapeRepository()
 {
 }
 
-QSharedPointer<Shape> ShapeRepository::getShape(const QString &id) const
+QSharedPointer<Shape> ShapeRepository::get(const QString &id) const
 {
     return m_shapeMap[id];
 }
 
-QSharedPointer<Shape> ShapeRepository::createShape(const QString &type, QString &id)
+QSharedPointer<Shape> ShapeRepository::create(const QString &type, const QString &id)
 {
     if (type == "Cube"){
         auto shape = QSharedPointer<Shape>(new Cube(id, 1.0f));
@@ -27,7 +27,17 @@ QSharedPointer<Shape> ShapeRepository::createShape(const QString &type, QString 
     throw UnsupportedShapeException();
 }
 
-void ShapeRepository::removeShape(const QString &id)
+bool ShapeRepository::exists(const QString &id) const
+{
+    return m_shapeMap.find(id) != m_shapeMap.end();
+}
+
+void ShapeRepository::remove(const QString &id)
 {
     m_shapeMap.remove(id);
+}
+
+QVector<QSharedPointer<Shape>> ShapeRepository::getAll()
+{
+    return QVector<QSharedPointer<Shape>>::fromList(m_shapeMap.values());
 }

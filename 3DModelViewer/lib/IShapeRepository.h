@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QSharedPointer>
+#include <QVector>
 
 class Shape;
 
@@ -12,9 +13,11 @@ public:
     IShapeRepository();
     virtual ~IShapeRepository();
 
-    virtual QSharedPointer<Shape> getShape(const QString &id) const = 0;
-    virtual QSharedPointer<Shape> createShape(const QString &type, QString &id) = 0;
-    virtual void removeShape(const QString &id) = 0;
+    virtual QSharedPointer<Shape> get(const QString &id) const = 0;
+    virtual QSharedPointer<Shape> create(const QString &type, const QString &id) = 0;
+    virtual bool exists(const QString &id) const = 0;
+    virtual void remove(const QString &id) = 0;
+    virtual QVector<QSharedPointer<Shape>> getAll() = 0;
 };
 
 #endif // ISHAPEREPOSITORY_H

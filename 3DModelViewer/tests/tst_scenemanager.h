@@ -16,7 +16,6 @@ public:
     ~TestSceneManager();
 
 private slots:
-    void createCubeShape();
     void cannotCreateCubeWithSameId();
 };
 

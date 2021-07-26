@@ -1,4 +1,8 @@
 #include "tst_scenemanager.h"
+#include "ShapeRepository.h"
+
+#include "DuplicateIdException.h"
+#include "Camera.h"
 
 TestSceneManager::TestSceneManager()
 {
@@ -10,26 +14,15 @@ TestSceneManager::~TestSceneManager()
 
 }
 
-void TestSceneManager::createCubeShape()
-{
-    SceneManager sceneManager;
-    QString shapeType("Cube");
-    QString shapeId("cube1");
-    auto cube = sceneManager.createShape(shapeType, shapeId);
-
-    QVERIFY2(cube != nullptr, "Cannot create cube");
-    QCOMPARE(cube->getId(), QString("cube1"));
-}
-
 void TestSceneManager::cannotCreateCubeWithSameId()
 {
-    /*SceneManager sceneManager;
+    Camera camera;
+    SceneManager sceneManager(QSharedPointer<IShapeRepository>(new ShapeRepository()), &camera);
     QString shapeType("Cube");
     QString shapeId("cube1");
     sceneManager.createShape(shapeType, shapeId);
-    auto secondCube = sceneManager.createShape(shapeType, shapeId);
 
-    QVERIFY2(secondCube == nullptr, "Cannot create cube");*/
+    QVERIFY_EXCEPTION_THROWN(sceneManager.createShape(shapeType, shapeId), DuplicateIdException);
 }
 
 //QTEST_APPLESS_MAIN(TestSceneManager)

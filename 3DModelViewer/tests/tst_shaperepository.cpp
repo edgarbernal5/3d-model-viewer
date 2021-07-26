@@ -32,10 +32,11 @@ void TestShapeRepository::createCubeShape()
     QString shapeId("cube1");
 
     ShapeRepository repository;
-    auto cube = repository.createShape(shapeType, shapeId);
+    auto cube = repository.create(shapeType, shapeId);
 
     QVERIFY2(cube != nullptr, "Cannot create a cube");
     QCOMPARE(cube->getId(), QString("cube1"));
+    QCOMPARE(repository.getAll().size(), 1);
 }
 
 void TestShapeRepository::getShapeGivenId()
@@ -46,20 +47,19 @@ void TestShapeRepository::getShapeGivenId()
 
     FakeShapeRepository repository({ new Cube(shapeId2, 1.0f), new Cube(shapeId1, 1.0f)});
 
-    auto cube = repository.getShape(shapeId1);
+    auto cube = repository.get(shapeId1);
 
     QVERIFY2(cube != nullptr, "Cannot get cube given its id");
     QCOMPARE(cube->getId(), QString("cube1"));
 }
 
 void TestShapeRepository::returnEmptyOnInexistentShape(){
-    QString shapeType("Cube");
     QString shapeId("cube1");
     QString shapeId2("cube2");
 
     FakeShapeRepository repository({ new Cube(shapeId, 1.0f)});
 
-    auto cube = repository.getShape(shapeId2);
+    auto cube = repository.get(shapeId2);
 
     QVERIFY2(cube == nullptr, "There is not a cube with that id");
 }
@@ -72,10 +72,11 @@ void TestShapeRepository::removeShapeGivenId()
 
     FakeShapeRepository repository({ new Cube(shapeId2, 1.0f), new Cube(shapeId1, 1.0f)});
 
-    repository.removeShape(shapeId2);
-    auto emptyCube = repository.getShape(shapeId2);
+    repository.remove(shapeId2);
+    auto emptyCube = repository.get(shapeId2);
 
     QVERIFY2(emptyCube == nullptr, "There is an issue removing shape");
+    QCOMPARE(repository.getAll().size(), 1);
 }
 
 void TestShapeRepository::cannotCreateUnsupportedShape()
@@ -84,7 +85,7 @@ void TestShapeRepository::cannotCreateUnsupportedShape()
     QString shapeType("Sphere");
     QString shapeId("sphere1");
 
-    QVERIFY_EXCEPTION_THROWN(repository.createShape(shapeType, shapeId), UnsupportedShapeException);
+    QVERIFY_EXCEPTION_THROWN(repository.create(shapeType, shapeId), UnsupportedShapeException);
 }
 
 //QTEST_APPLESS_MAIN(TestShapeRepository)

@@ -11,9 +11,11 @@ public:
     ShapeRepository();
     ~ShapeRepository();
 
-    QSharedPointer<Shape> getShape(const QString &id) const override;
-    QSharedPointer<Shape> createShape(const QString &type, QString &id) override;
-    void removeShape(const QString &id) override;
+    QSharedPointer<Shape> get(const QString &id) const override;
+    QSharedPointer<Shape> create(const QString &type, const QString &id) override;
+    bool exists(const QString &id) const override;
+    void remove(const QString &id) override;
+    QVector<QSharedPointer<Shape>> getAll() override;
 
 protected:
     QMap<QString, QSharedPointer<Shape>> m_shapeMap;

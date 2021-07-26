@@ -1,11 +1,20 @@
 #include "mainwindow.h"
-
+#include <QSurfaceFormat>
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setVersion(3, 3);
+
+    QSurfaceFormat::setDefaultFormat(format);
+
+    MainWindow window;
+    window.show();
+
+    return app.exec();
 }
