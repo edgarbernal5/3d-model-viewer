@@ -90,42 +90,7 @@ void SceneManager::renderAll()
 
 Shape* SceneManager::pickShape(int x, int y, int width, int height)
 {
-    float dx = 2.0f * (float)x / (float)width - 1.0f;
-    float dy = 2.0f * (float)y / (float)height - 1.0f;
-
-    QVector4D screenPos(dx, -dy, -1, 1);
-    QMatrix4x4 ProjectView =  m_camera->getProjection() * m_camera->getView();
-    QMatrix4x4 viewProjectionInverse = ProjectView.inverted();
-    QVector4D worldPos = viewProjectionInverse * screenPos;
-    worldPos.setW(1.0f / worldPos.w());
-    worldPos.setX(worldPos.x() * worldPos.w());
-    worldPos.setY(worldPos.y() * worldPos.w());
-    worldPos.setZ(worldPos.z() * worldPos.w());
-
-    QVector4D screenPos2(dx, -dy, 1, 1);
-    QVector4D worldPos2 = viewProjectionInverse * screenPos2;
-    worldPos2.setW(1.0f / worldPos2.w());
-    worldPos2.setX(worldPos2.x() * worldPos2.w());
-    worldPos2.setY(worldPos2.y() * worldPos2.w());
-    worldPos2.setZ(worldPos2.z() * worldPos2.w());
-
-    QVector4D direction2 = worldPos2 - worldPos;
-
-    QVector3D nearPoint(x, -y, -1);
-    nearPoint.unproject(m_camera->getView(), m_camera->getProjection(), QRect(0,0,width,height));
-
-    QVector3D farPoint(x, -y, 1);
-    farPoint.unproject(m_camera->getView(), m_camera->getProjection(), QRect(0,0,width,height));
-
-    QVector3D direction = farPoint - nearPoint;
-    direction.normalize();
-
-    QVector3D newDir = direction2.toVector3D();
-    newDir.normalize();
-
-    Ray ray;
-    ray.m_direction = newDir;
-    ray.m_origin = worldPos.toVector3D();
+    Ray ray = Ray::createFromScreenPosition(x, y, width, height, m_camera->getView(),  m_camera->getProjection());
 
     auto shapes = m_shapeRepository->getAll();
     float closestBox = FLT_MAX;

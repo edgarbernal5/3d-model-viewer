@@ -13,5 +13,5 @@ void main()
   vFragPos = vec3(model * vec4(position, 1.0));
   vNormal = mat3(transpose(inverse(model))) * normal;
 
-  gl_Position = mvp * vec4(vFragPos, 1.0);
+  gl_Position = mvp * vec4(position, 1.0);
 }

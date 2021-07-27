@@ -24,8 +24,7 @@ SOURCES += \
     Shape.cpp \
     ShapeBuffers.cpp \
     ShapeRenderable.cpp \
-    ShapeRepository.cpp \
-    OpenGLWidget.cpp
+    ShapeRepository.cpp
 
 HEADERS += \
     Axis.h \
@@ -45,7 +44,6 @@ HEADERS += \
     ShapeRenderable.h \
     ShapeRepository.h \
     UnsupportedShapeException.h \
-    OpenGLWidget.h \
     VertexData.h
 
 LIBS += -lOpenGL32

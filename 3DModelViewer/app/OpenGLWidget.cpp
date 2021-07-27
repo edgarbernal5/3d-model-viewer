@@ -11,7 +11,6 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
     setMouseTracking(true);
-    srand (static_cast <unsigned> (time(0)));
 
     m_camera.setFarPlane(100.0f);
     m_camera.setNearPlane(1.0f);
@@ -42,6 +41,11 @@ void OpenGLWidget::createCube(QString& cubeId)
     update();
 }
 
+void OpenGLWidget::setLabel(QLabel* label)
+{
+    m_lblStatus = label;
+}
+
 float OpenGLWidget::getRandomNumber(float min, float max)
 {
     float number = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -57,7 +61,7 @@ void OpenGLWidget::initializeGL()
     m_sceneManager.reset(new SceneManager(shapeRepository, &m_camera));
 
     glEnable(GL_DEPTH_TEST);
-
+glEnable(GL_CULL_FACE);
     m_timer.start(16, this);
 }
 
@@ -88,16 +92,16 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     QVector2D currentPosition = QVector2D(event->localPos());
+
     if (m_mouseButtonDown == Qt::LeftButton){
         Shape* shape = m_sceneManager->pickShape(currentPosition.x(), currentPosition.y(), width(), height());
         if (shape == nullptr){
-            //m_lblStatus->setText("Nothing is selected");
-            qDebug() << "Nothing is selected";
+            m_lblStatus->setText("Nothing is selected");
         } else{
             QString status(shape->getId());
             status.append(QString(" is selected"));
-            qDebug() << status;
-            //m_lblStatus->setText(status);
+
+            m_lblStatus->setText(status);
         }
     }
     m_mouseButtonDown = Qt::NoButton;
