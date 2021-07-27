@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>fragShader.frag</file>
-        <file>vertexShader.vert</file>
+        <file>phong.frag</file>
+        <file>phong.vert</file>
+        <file>axis.vert</file>
+        <file>axis.frag</file>
     </qresource>
 </RCC>

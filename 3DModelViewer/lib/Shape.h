@@ -9,6 +9,8 @@
 #include "ShapeBuffers.h"
 #include "ShapeRenderable.h"
 
+#include "BoundingBox.h"
+
 class Mesh;
 class Material;
 
@@ -28,6 +30,11 @@ public:
     void render(QOpenGLShaderProgram *program) override;
 
     void setMaterial(Material* material);
+    QVector3D getPosition();
+    void setPosition(QVector3D &position);
+    QMatrix4x4 getTransformation();
+    virtual BoundingBox& getBoundingBox() = 0;
+
 protected:
     QString m_id;
 
@@ -37,6 +44,7 @@ protected:
     QOpenGLVertexArrayObject m_indicesBuffer;
 
     Material* m_material;
+    QVector3D m_position;
 };
 
 #endif // SHAPE_H

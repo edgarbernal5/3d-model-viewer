@@ -12,4 +12,5 @@ struct VertexData
 };
 Q_DECL_CONSTEXPR inline VertexData::VertexData() {}
 Q_DECL_CONSTEXPR inline VertexData::VertexData(const QVector3D &position, const QVector3D &normal) : m_position(position), m_normal(normal) {}
+
 #endif // VERTEXDATA_H

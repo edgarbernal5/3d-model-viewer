@@ -66,10 +66,10 @@ const QMatrix4x4& Camera::getProjection()
 }
 
 
-void Camera::rotate (QVector2D currentMousePosition, QVector2D prevMousePosition)
+void Camera::rotate(QVector2D currentMousePosition, QVector2D prevMousePosition)
 {
-    QVector2D diff = currentMousePosition - prevMousePosition;
-    QVector3D angles = QVector3D(diff.y(), diff.x(), 0.0);
+    QVector2D mouseVelocity = currentMousePosition - prevMousePosition;
+    QVector3D angles = QVector3D(mouseVelocity.y(), mouseVelocity.x(), 0.0);
 
     m_yawPitchRoll += angles;
     QQuaternion rotation = QQuaternion::fromEulerAngles(m_yawPitchRoll.x(),m_yawPitchRoll.y(),m_yawPitchRoll.z());
@@ -80,6 +80,33 @@ void Camera::rotate (QVector2D currentMousePosition, QVector2D prevMousePosition
 
     m_position= m_target + translation;
     m_up = rotation * QVector3D(0,1,0);
+    m_viewDirty = true;
+}
+
+void Camera::pan(QVector2D currentMousePosition, QVector2D prevMousePosition)
+{
+    QVector2D mouseVelocity = prevMousePosition - currentMousePosition;
+    QVector3D right = QVector3D::crossProduct(m_target - m_position, m_up);
+    right.normalize();
+
+    QVector3D delta = right * mouseVelocity.x() * 0.001f - m_up * mouseVelocity.y() *0.001f;
+    m_position += delta;
+    m_target += delta;
+    m_viewDirty = true;
+}
+
+void Camera::zoom(int deltaZoom)
+{
+    float wheelDelta = deltaZoom * 0.001f;
+    QVector3D viewDirection = m_target - m_position;
+    viewDirection.normalize();
+
+    QVector3D newPosition = m_position + viewDirection * wheelDelta;
+
+    if (newPosition.distanceToPoint(m_target) < 0.5f)
+        return;
+
+    m_position = newPosition;
     m_viewDirty = true;
 }
 

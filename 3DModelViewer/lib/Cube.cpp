@@ -67,3 +67,11 @@ Cube::Cube(const QString &id, float size)
 
     m_mesh.reset(new Mesh(vertices, indices));
 }
+
+BoundingBox& Cube::getBoundingBox()
+{
+    m_aabb.m_max = m_position + QVector3D(1,1,1) * m_size;
+    m_aabb.m_min = m_position - QVector3D(1,1,1) * m_size;
+
+    return m_aabb;
+}

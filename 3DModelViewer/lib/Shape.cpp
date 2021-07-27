@@ -69,9 +69,7 @@ void Shape::render(QOpenGLShaderProgram *program){
 
     offset += sizeof(QVector3D);
 
-    // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
     program->setAttributeBuffer(normalLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
-
 
     f->glDrawArrays(GL_TRIANGLES, 0, m_mesh->getVertices().size());
 
@@ -83,3 +81,21 @@ void Shape::setMaterial(Material* material)
 {
     m_material = material;
 }
+
+QMatrix4x4 Shape::getTransformation()
+{
+    QMatrix4x4 modelMatrix;
+    modelMatrix.setToIdentity();
+    modelMatrix.translate(m_position);
+    return modelMatrix;
+}
+QVector3D Shape::getPosition()
+{
+    return m_position;
+}
+void Shape::setPosition(QVector3D &position)
+{
+    m_position = position;
+}
+
+

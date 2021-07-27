@@ -12,11 +12,14 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Axis.cpp \
+    BoundingBox.cpp \
     Camera.cpp \
     Cube.cpp \
     IShapeRepository.cpp \
     Material.cpp \
     Mesh.cpp \
+    Ray.cpp \
     SceneManager.cpp \
     Shape.cpp \
     ShapeBuffers.cpp \
@@ -25,12 +28,16 @@ SOURCES += \
     OpenGLWidget.cpp
 
 HEADERS += \
+    Axis.h \
+    AxisData.h \
+    BoundingBox.h \
     Camera.h \
     Cube.h \
     DuplicateIdException.h \
     IShapeRepository.h \
     Material.h \
     Mesh.h \
+    Ray.h \
     SceneManager.h \
     SceneRenderer.h \
     Shape.h \

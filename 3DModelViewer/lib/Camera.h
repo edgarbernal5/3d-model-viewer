@@ -27,6 +27,8 @@ public:
 
     void init();
     void rotate(QVector2D currentMousePosition, QVector2D prevMousePosition);
+    void pan(QVector2D currentMousePosition, QVector2D prevMousePosition);
+    void zoom(int deltaZoom);
 private:
     QMatrix4x4 m_view;
     QMatrix4x4 m_projection;

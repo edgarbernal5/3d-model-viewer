@@ -5,6 +5,7 @@
 #include <QOpenGLFunctions>
 #include <QVector2D>
 #include <QBasicTimer>
+#include <QMouseEvent>
 
 #include "Camera.h"
 
@@ -16,6 +17,7 @@ class OpenGLWidget : public QOpenGLWidget, public QOpenGLFunctions
 public:
     OpenGLWidget(QWidget *parent = nullptr);
 
+    void createCube(QString& cubeId);
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -25,6 +27,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
 
+    void wheelEvent(QWheelEvent *event) override;
+
     void timerEvent(QTimerEvent *e) override;
 
     QBasicTimer m_timer;
@@ -32,7 +36,10 @@ protected:
     Camera m_camera;
     QScopedPointer<SceneManager> m_sceneManager;
 
-    bool m_mouseDown=false;
+    Qt::MouseButton m_mouseButtonDown = Qt::NoButton;
+
+private:
+    float getRandomNumber(float min, float max);
 };
 
 #endif // OPENGLWIDGET_H
