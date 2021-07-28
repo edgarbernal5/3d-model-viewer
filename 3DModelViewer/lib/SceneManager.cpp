@@ -10,15 +10,20 @@
 #include "Axis.h"
 #include "Ray.h"
 
+SceneManager::SceneManager()
+{
+}
+
 SceneManager::SceneManager(QSharedPointer<IShapeRepository> shapeRepository, Camera* camera)
     : m_shapeRepository(shapeRepository), m_camera(camera)
 {
     createShaders();
 
-    m_axis=new Axis();
+    m_axis.reset(new Axis());
 }
 
-void SceneManager::createShaders(){
+void SceneManager::createShaders()
+{
     m_phongProgram = new QOpenGLShaderProgram();
 
     if (!m_phongProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/phong.vert"))
@@ -26,12 +31,13 @@ void SceneManager::createShaders(){
         qDebug() << "Failed to add vertex shader" << endl;
     }
 
-    if (!m_phongProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/phong.frag")){
-
+    if (!m_phongProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/phong.frag"))
+    {
         qDebug() << "Failed to add fragment shader" << endl;
     }
 
-    if (!m_phongProgram->link()){
+    if (!m_phongProgram->link())
+    {
         qDebug() << "There was an issue linking shaders" << endl;
     }
 
@@ -47,12 +53,13 @@ void SceneManager::createShaders(){
         qDebug() << "Failed to add vertex shader" << endl;
     }
 
-    if (!m_axisProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/axis.frag")){
-
+    if (!m_axisProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/axis.frag"))
+    {
         qDebug() << "Failed to add fragment shader" << endl;
     }
 
-    if (!m_axisProgram->link()){
+    if (!m_axisProgram->link())
+    {
         qDebug() << "There was an issue linking shaders" << endl;
     }
 
@@ -71,13 +78,12 @@ void SceneManager::renderAll()
 
     QVector3D lightPosition(6.8f,6.8f, 6.4f);
     m_phongProgram->setUniformValue("vLightPos", lightPosition);
-
     m_phongProgram->setUniformValue("vViewPos", m_camera->getPosition());
 
     auto shapes = m_shapeRepository->getAll();
-    for(int i = 0; i < shapes.size(); ++i){
-        QMatrix4x4 modelTransformation = shapes[i]->getTransformation();
-
+    for(int i = 0; i < shapes.size(); ++i)
+    {
+        auto modelTransformation = shapes[i]->getTransformation();
         auto mvp = m_camera->getProjection() * m_camera->getView() * modelTransformation;
 
         m_phongProgram->setUniformValue("mvp", mvp);
@@ -93,15 +99,16 @@ Shape* SceneManager::pickShape(int x, int y, int width, int height)
     Ray ray = Ray::createFromScreenPosition(x, y, width, height, m_camera->getView(),  m_camera->getProjection());
 
     auto shapes = m_shapeRepository->getAll();
-    float closestBox = FLT_MAX;
+    float closestDistanceCamera = FLT_MAX;
 
-    Shape* selectedShape=nullptr;
+    Shape* selectedShape = nullptr;
     for(int i = 0; i < shapes.size(); ++i){
         auto shape = shapes[i];
         if (ray.intersects(shape->getBoundingBox())){
-            if (m_camera->getPosition().distanceToPoint(shape->getPosition()) < closestBox){
+            float distanceToCamera = m_camera->getPosition().distanceToPoint(shape->getPosition());
+            if (distanceToCamera < closestDistanceCamera){
                 selectedShape = shape.get();
-                closestBox=m_camera->getPosition().distanceToPoint(shape->getPosition());
+                closestDistanceCamera = distanceToCamera;
             }
         }
     }
@@ -119,7 +126,7 @@ Shape* SceneManager::createShape(const QString &type, QString &id)
         throw DuplicateIdException();
 
     auto shape = m_shapeRepository->create(type, id);
-    shape->createBuffers(shape->getMesh());
+    createBuffersFor(shape.get());
     return shape.get();
 }
 
@@ -138,4 +145,13 @@ void SceneManager::drawAxis(){
     m_axis->render(m_axisProgram);
 
     m_axisProgram->release();
+}
+
+void SceneManager::createBuffersFor(Shape* shape)
+{
+    shape->createBuffers(shape->getMesh());
+}
+
+void SceneManager::setCamera(Camera* camera){
+    m_camera = camera;
 }

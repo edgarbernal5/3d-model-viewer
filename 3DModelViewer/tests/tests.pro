@@ -7,10 +7,12 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 HEADERS += \
+    FakeShapeRepository.h \
     tst_scenemanager.h \
     tst_shaperepository.h
 
 SOURCES +=  \
+    FakeShapeRepository.cpp \
     main.cpp \
     tst_scenemanager.cpp \
     tst_shaperepository.cpp

@@ -5,28 +5,17 @@
 #include "UnsupportedShapeException.h"
 
 #include "Cube.h"
+#include "FakeShapeRepository.h"
 
-FakeShapeRepository::FakeShapeRepository(QVector<Shape*> shapes)
-{
-    for(int i = 0; i < shapes.size(); ++i)
-    {
-        m_shapeMap[shapes[i]->getId()] = QSharedPointer<Shape>(shapes[i]);
-    }
-}
-
-FakeShapeRepository::~FakeShapeRepository()
+ShapeRepositoryShould::ShapeRepositoryShould()
 {
 }
 
-TestShapeRepository::TestShapeRepository()
+ShapeRepositoryShould::~ShapeRepositoryShould()
 {
 }
 
-TestShapeRepository::~TestShapeRepository()
-{
-}
-
-void TestShapeRepository::createCubeShape()
+void ShapeRepositoryShould::createCubeShape()
 {
     QString shapeType("Cube");
     QString shapeId("cube1");
@@ -39,7 +28,7 @@ void TestShapeRepository::createCubeShape()
     QCOMPARE(repository.getAll().size(), 1);
 }
 
-void TestShapeRepository::getShapeGivenId()
+void ShapeRepositoryShould::getShapeGivenId()
 {
     QString shapeType("Cube");
     QString shapeId1("cube1");
@@ -53,7 +42,7 @@ void TestShapeRepository::getShapeGivenId()
     QCOMPARE(cube->getId(), QString("cube1"));
 }
 
-void TestShapeRepository::returnEmptyOnInexistentShape(){
+void ShapeRepositoryShould::returnEmptyOnInexistentShape(){
     QString shapeId("cube1");
     QString shapeId2("cube2");
 
@@ -64,9 +53,8 @@ void TestShapeRepository::returnEmptyOnInexistentShape(){
     QVERIFY2(cube == nullptr, "There is not a cube with that id");
 }
 
-void TestShapeRepository::removeShapeGivenId()
+void ShapeRepositoryShould::removeShapeGivenId()
 {
-    QString shapeType("Cube");
     QString shapeId1("cube1");
     QString shapeId2("cube2");
 
@@ -79,7 +67,7 @@ void TestShapeRepository::removeShapeGivenId()
     QCOMPARE(repository.getAll().size(), 1);
 }
 
-void TestShapeRepository::cannotCreateUnsupportedShape()
+void ShapeRepositoryShould::cannotCreateUnsupportedShape()
 {
     ShapeRepository repository;
     QString shapeType("Sphere");
@@ -88,6 +76,6 @@ void TestShapeRepository::cannotCreateUnsupportedShape()
     QVERIFY_EXCEPTION_THROWN(repository.create(shapeType, shapeId), UnsupportedShapeException);
 }
 
-//QTEST_APPLESS_MAIN(TestShapeRepository)
+//QTEST_APPLESS_MAIN(ShapeRepositoryShould)
 
 //#include "tst_shaperepository.moc"

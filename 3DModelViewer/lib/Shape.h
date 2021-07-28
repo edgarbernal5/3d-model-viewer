@@ -24,16 +24,14 @@ public:
     Mesh* getMesh() const;
 
     void createBuffers(Mesh* mesh) override;
-    QOpenGLBuffer& getVerticesBuffer() override;
-    QOpenGLVertexArrayObject& getIndicesBuffer() override;
-
     void render(QOpenGLShaderProgram *program) override;
 
-    void setMaterial(Material* material);
     QVector3D getPosition();
-    void setPosition(QVector3D &position);
+    void setPosition(const QVector3D &position);
     QMatrix4x4 getTransformation();
     virtual BoundingBox& getBoundingBox() = 0;
+
+    void setMaterial(QSharedPointer<Material> material);
 
 protected:
     QString m_id;
@@ -41,9 +39,10 @@ protected:
     QSharedPointer<Mesh> m_mesh;
 
     QOpenGLBuffer m_verticesBuffer;
-    QOpenGLVertexArrayObject m_indicesBuffer;
+    QOpenGLBuffer m_indicesBuffer;
+    QOpenGLVertexArrayObject m_vao;
 
-    Material* m_material;
+    QSharedPointer<Material> m_material;
     QVector3D m_position;
 };
 

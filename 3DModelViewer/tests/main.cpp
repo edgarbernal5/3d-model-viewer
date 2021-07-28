@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[])
 {
-    TestSceneManager test1;
-    TestShapeRepository test2;
+    SceneManagerShould test1;
+    ShapeRepositoryShould test2;
 
     int failedTests = 0;
     failedTests += QTest::qExec(&test1, argc, argv);

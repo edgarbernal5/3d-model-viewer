@@ -19,22 +19,24 @@ Axis::Axis()
     QVector<AxisData> vertices(vertSize);
     qCopy(verticesArray, verticesArray + vertSize, vertices.begin());
 
+    m_vertexArrayObj.create();
+    m_vertexArrayObj.bind();
+
+    m_verticesBuffer = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
     m_verticesBuffer.create();
     m_verticesBuffer.bind();
     m_verticesBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_verticesBuffer.allocate(vertices.data(), vertices.size() * sizeof(AxisData));
 
-    m_indicesBuffer.create();
-    m_indicesBuffer.bind();
 }
 
 void Axis::render(QOpenGLShaderProgram *program){
      QOpenGLExtraFunctions *f = QOpenGLContext::currentContext()->extraFunctions();
 
+     m_vertexArrayObj.bind();
      m_verticesBuffer.bind();
-     m_indicesBuffer.bind();
 
-    quintptr offset = 0;
+        quintptr offset = 0;
      int vertexLocation = program->attributeLocation("position");
      int colorLocation = program->attributeLocation("color");
      program->enableAttributeArray(vertexLocation);
@@ -46,4 +48,6 @@ void Axis::render(QOpenGLShaderProgram *program){
      program->setAttributeBuffer(colorLocation, GL_FLOAT, offset, 3, sizeof(AxisData));
 
      f->glDrawArrays(GL_LINES, 0, 6);
+
+     m_vertexArrayObj.release();
 }

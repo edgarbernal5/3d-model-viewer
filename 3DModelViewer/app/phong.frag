@@ -7,7 +7,7 @@ uniform vec3 vSpecularColor;
 uniform vec3 vLightColor;
 uniform vec3 vLightPos;
 uniform vec3 vViewPos;
-uniform float shininess;
+uniform float fShininess;
 
 in highp vec3 vNormal;
 in highp vec3 vFragPos;
@@ -22,12 +22,12 @@ void main()
     vec3 norm = normalize(vNormal);
     vec3 lightDir = normalize(vLightPos - vFragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = vLightColor* (diff * vDiffuseColor);
+    vec3 diffuse = vLightColor * vBaseColor * (diff * vDiffuseColor);
 
     // specular
     vec3 viewDir = normalize(vViewPos - vFragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), fShininess);
     vec3 specular = (spec * vSpecularColor);
 
     vec3 result = ambient + diffuse + specular;

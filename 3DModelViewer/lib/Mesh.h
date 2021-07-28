@@ -12,7 +12,6 @@ class Mesh
 public:
     Mesh(QVector<VertexData>& vertices, QVector<unsigned short>& indices);
 
-    /*SomeType* getUVs();*/
     const QVector<VertexData>& getVertices();
     const QVector<unsigned short>& getIndices();
 

@@ -7,7 +7,7 @@ struct BoundingBox
 {
 public:
     BoundingBox();
-    BoundingBox( QVector3D min, QVector3D max);
+    BoundingBox(QVector3D min, QVector3D max);
     QVector3D m_min, m_max;
 };
 

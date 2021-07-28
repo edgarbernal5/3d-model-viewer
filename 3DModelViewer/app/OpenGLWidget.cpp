@@ -5,6 +5,7 @@
 #include "Shape.h"
 #include "Material.h"
 #include <QQuaternion>
+#include <QSharedPointer>
 #include <ctime>
 
 OpenGLWidget::OpenGLWidget(QWidget *parent)
@@ -25,7 +26,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
 
 void OpenGLWidget::createCube(QString& cubeId)
 {
-    makeCurrent ();
+    makeCurrent();
     QString cubeType("Cube");
 
     Shape* shape = m_sceneManager->createShape(cubeType, cubeId);
@@ -33,8 +34,9 @@ void OpenGLWidget::createCube(QString& cubeId)
     QVector3D randomPosition(getRandomNumber(-10.0f, 10.0f), getRandomNumber(-10.0f, 10.0f), getRandomNumber(-10.0f, 10.0f));
     shape->setPosition(randomPosition);
 
-    Material* material = new Material();
-    material->setBaseColor(QVector3D(0.5f, 1,1));
+    QSharedPointer<Material> material(new Material());
+    material->setBaseColor(QVector3D(getRandomNumber(0,1), getRandomNumber(0,1),getRandomNumber(0,1)));
+    material->setShininess(getRandomNumber(10.0f, 255.0f));
     shape->setMaterial(material);
 
     doneCurrent();
@@ -61,19 +63,20 @@ void OpenGLWidget::initializeGL()
     m_sceneManager.reset(new SceneManager(shapeRepository, &m_camera));
 
     glEnable(GL_DEPTH_TEST);
-glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+
     m_timer.start(16, this);
 }
 
 void OpenGLWidget::timerEvent(QTimerEvent *)
 {
-    update();
+    if (m_mouseButtonDown != Qt::NoButton)
+        update();
 }
 
 void OpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_mousePressPosition = QVector2D(event->localPos());
-
     m_mouseButtonDown = event->button();
 }
 
@@ -95,9 +98,12 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 
     if (m_mouseButtonDown == Qt::LeftButton){
         Shape* shape = m_sceneManager->pickShape(currentPosition.x(), currentPosition.y(), width(), height());
-        if (shape == nullptr){
+        if (shape == nullptr)
+        {
             m_lblStatus->setText("Nothing is selected");
-        } else{
+        }
+        else
+        {
             QString status(shape->getId());
             status.append(QString(" is selected"));
 
@@ -107,8 +113,10 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
     m_mouseButtonDown = Qt::NoButton;
 }
 
-void OpenGLWidget::wheelEvent(QWheelEvent *event){
+void OpenGLWidget::wheelEvent(QWheelEvent *event)
+{
     m_camera.zoom(event->delta());
+    update();
 }
 
 void OpenGLWidget::paintGL()

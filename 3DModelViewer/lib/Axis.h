@@ -15,9 +15,7 @@ public:
     void render(QOpenGLShaderProgram *program);
 private:
     QOpenGLBuffer m_verticesBuffer;
-    QOpenGLVertexArrayObject m_indicesBuffer;
-
-
+    QOpenGLVertexArrayObject m_vertexArrayObj;
 };
 
 #endif // AXIS_H

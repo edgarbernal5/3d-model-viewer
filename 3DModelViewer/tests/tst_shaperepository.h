@@ -3,24 +3,15 @@
 
 #include <QtTest>
 
-#include "ShapeRepository.h"
 
-class Shape;
 
-class FakeShapeRepository : public ShapeRepository
-{
-public:
-    FakeShapeRepository(QVector<Shape*> shapes);
-     ~FakeShapeRepository();
-};
-
-class TestShapeRepository : public QObject
+class ShapeRepositoryShould : public QObject
 {
     Q_OBJECT
 
 public:
-    TestShapeRepository();
-    ~TestShapeRepository();
+    ShapeRepositoryShould();
+    ~ShapeRepositoryShould();
 
 private slots:
     void createCubeShape();

@@ -7,16 +7,29 @@
 
 #include "Shape.h"
 
-class TestSceneManager : public QObject
+class TestSceneManager : public SceneManager
+{
+public:
+    TestSceneManager(QSharedPointer<IShapeRepository> shapeRepository);
+
+protected:
+    void createBuffersFor(Shape* shape) override;
+};
+
+class SceneManagerShould : public QObject
 {
     Q_OBJECT
 
 public:
-    TestSceneManager();
-    ~TestSceneManager();
+    SceneManagerShould();
+    ~SceneManagerShould();
 
 private slots:
     void cannotCreateCubeWithSameId();
+    void notPickingShapesOnEmptyScene();
+    void shapeIsSelectedByPicking();
+    void pickClosestShape();
+    void notPickingShapeWhenRayDontIntersects();
 };
 
 #endif // TST_SCENEMANAGER_H

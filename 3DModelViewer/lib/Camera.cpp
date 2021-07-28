@@ -6,13 +6,13 @@ Camera::Camera()
 }
 
 void Camera::setAspectRatio(float aspectRatio){
-    m_aspectRatio=aspectRatio;
-     m_projectionDirty=true;
+    m_aspectRatio = aspectRatio;
+    m_projectionDirty = true;
 }
 
 void Camera::setFieldOfView(float fov)
 {
-    m_fov=fov;
+    m_fov = fov;
     m_projectionDirty=true;
 }
 
@@ -110,12 +110,12 @@ void Camera::zoom(int deltaZoom)
     m_viewDirty = true;
 }
 
-void Camera::init(){
+void Camera::init()
+{
     QMatrix4x4 view = getView();
     QQuaternion inverseView = QQuaternion::fromRotationMatrix(view.inverted().normalMatrix());
 
     m_yawPitchRoll = inverseView.toEulerAngles();
-
 }
 
 QVector3D Camera::getPosition()
